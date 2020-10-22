@@ -1,23 +1,16 @@
 from django.contrib.auth import get_user_model, login, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.views import PasswordChangeView, LogoutView
-from django.core.mail import send_mail
-from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
 from django.views.generic import View, FormView, DetailView, CreateView, UpdateView
 from django.conf import settings
 
 from accounts.forms import MyUserCreationForm, UserChangeForm, ProfileChangeForm, \
     PasswordChangeForm, PasswordResetEmailForm, PasswordResetForm
-from webapp.models import Cart
+
 from .models import AuthToken, Profile
-
-
 
 
 class RegisterView(CreateView):
@@ -122,7 +115,7 @@ class UserChangeView(UserPassesTestMixin, UpdateView):
         return ProfileChangeForm(**form_kwargs)
 
         # if self.request.method == 'POST':
-        #     form = ProfileChangeForm(instance=self.object, data=self.request.POST, 
+        #     form = ProfileChangeForm(instance=self.object, data=self.request.POST,
         #                                 files=self.request.FILES)
         # else:
         #     form = ProfileChangeForm(instance=self.object)
@@ -183,11 +176,3 @@ class UserPasswordResetView(UpdateView):
 
     def get_token(self):
         return AuthToken.get_token(self.kwargs.get('token'))
-
-
-# class CartClearLogoutView(LogoutView):
-#     @method_decorator(never_cache)
-#     def dispatch(self, request, *args, **kwargs):
-#         cart_ids = request.session.get('cart_ids', [])
-#         Cart.objects.filter(pk__in=cart_ids).delete()
-#         return super().dispatch(request, *args, **kwargs)
