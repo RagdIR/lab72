@@ -6,11 +6,18 @@
         <p><input type="text" name="text" placeholder="Text"></p>
         <p><input type="text" name="author" placeholder="Author"></p>
         <p><input type="text" name="email" placeholder="Email"></p>
-        <input type="submit">
+        <input type="submit" value="Добавить">
     </form>
+{% endblock %}
+
+{% block quote %}
+    <p id="text"></p>
+    <p id="created_at"></p>
+    <p id="rating"></p>
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript" src="{% static "js/api_client.js" %}"></script>
     <script type="text/javascript" src="{% static "js/form_control.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/api.js" %}"></script>
 {% endblock %}

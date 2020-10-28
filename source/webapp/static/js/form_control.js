@@ -13,3 +13,4 @@ function initForm() {
 window.addEventListener('load', function() {
     initForm();
 });
+

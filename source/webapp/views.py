@@ -8,3 +8,5 @@ class IndexView(View):
     @method_decorator(ensure_csrf_cookie)
     def get(self, request, *args, **kwargs):
         return render(request, 'index.html')
+
+
