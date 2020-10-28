@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.sessions.models import Session
 
 STATUS_NEW = 'new'
 STATUS_MODERATED = 'moderated'
@@ -18,10 +19,28 @@ class Quote(models.Model):
     status = models.CharField(max_length=15, verbose_name='Статус', choices=STATUS_CHOICES, default=DEFAULT_STATUS)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
 
+    @classmethod
+    def get_moderated(cls):
+        return cls.objects.filter(status=STATUS_MODERATED)
+
     def __str__(self):
         return f'{self.text[:20]}'
 
     class Meta:
         verbose_name = 'Цитата'
         verbose_name_plural = 'Цитаты'
-        ordering = ('-created_at')
+        ordering = ('-created_at',)
+
+
+class Vote(models.Model):
+    session_key = models.CharField(max_length=40, verbose_name='Ключ сессии')
+    quote = models.ForeignKey('webapp.Quote', related_name='votes', on_delete=models.CASCADE, verbose_name='Цитата')
+    rating = models.IntegerField(choices=((1, 'up',), (-1, 'down')), verbose_name='Рейтинг')
+
+    def __str__(self):
+        return f'{self.quote}: {self.rating}'
+
+    class Meta:
+        verbose_name = 'Рейтинг'
+        verbose_name_plural = 'Рейтинги'
+        ordering = ('quote', 'rating')
